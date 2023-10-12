@@ -241,10 +241,6 @@ class Transformer extends OperationNodeTransformer {
         }
 
         for (const valueList of newNode.values.values) {
-          if (!PrimitiveValueListNode.is(valueList)) {
-            throw new Error("Expected PrimitiveValueListNode, got: " + valueList.kind);
-          }
-
           const values = writeable(valueList.values);
 
           for (let i = 0; i < columnSerializers.length; i++) {
