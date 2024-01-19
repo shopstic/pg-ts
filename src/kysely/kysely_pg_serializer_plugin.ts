@@ -246,7 +246,13 @@ class Transformer extends OperationNodeTransformer {
           for (let i = 0; i < columnSerializers.length; i++) {
             const serializer = columnSerializers[i];
             if (serializer) {
-              values[i] = serializer(values[i]);
+              const value = values[i] as any;
+              if (ValueNode.is(value)) {
+                (value as Writeable<typeof value>).value = serializer(value.value);
+              }
+              // else {
+              //   values[i] = serializer(values[i]);
+              // }
             }
           }
         }

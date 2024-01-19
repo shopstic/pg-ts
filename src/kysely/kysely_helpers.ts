@@ -48,7 +48,7 @@ export function serializeMultiDimArray(
   array: unknown,
 ): string {
   if (!Array.isArray(array)) {
-    throw new Error("Expected an array, instead got: " + array);
+    throw new Error("Expected an array, instead got: " + JSON.stringify(array));
   }
 
   if (arrayDimensions === 1) {
@@ -215,9 +215,13 @@ export function serializePgValue(value: unknown): string {
     return JSON.stringify(value);
   }
 
+  if (typeof value === "bigint") {
+    return value.toString();
+  }
+
   if (value instanceof Date) {
     return serializePgDate(value);
   }
 
-  throw new Error(`Unsupported serialization for value ${value}`);
+  throw new Error(`Unsupported serialization for value ${value} of type ${typeof value}`);
 }
