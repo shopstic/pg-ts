@@ -1,8 +1,10 @@
 import {
   AliasNode,
+  assert,
   BinaryOperationNode,
   ColumnNode,
   ColumnUpdateNode,
+  DefaultInsertValueNode,
   DeleteQueryNode,
   IdentifierNode,
   InsertQueryNode,
@@ -189,6 +191,8 @@ class Transformer extends OperationNodeTransformer {
       }
 
       const nodeValue = node.value;
+      assert(ColumnNode.is(node.column));
+
       const columnName = node.column.column.name;
       const serializer = this.getSerializer(currentTables[0].name, columnName, currentTables[0].schema);
 
@@ -245,14 +249,15 @@ class Transformer extends OperationNodeTransformer {
 
           for (let i = 0; i < columnSerializers.length; i++) {
             const serializer = columnSerializers[i];
+
             if (serializer) {
+              // deno-lint-ignore no-explicit-any
               const value = values[i] as any;
               if (ValueNode.is(value)) {
                 (value as Writeable<typeof value>).value = serializer(value.value);
+              } else if (!DefaultInsertValueNode.is(value)) {
+                values[i] = serializer(values[i]);
               }
-              // else {
-              //   values[i] = serializer(values[i]);
-              // }
             }
           }
         }
