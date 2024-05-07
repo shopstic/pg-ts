@@ -37,7 +37,7 @@
               };
               "nix.enableLanguageServer" = true;
               "nix.formatterPath" = pkgs.nixpkgs-fmt + "/bin/nixpkgs-fmt";
-              "nix.serverPath" = pkgs.rnix-lsp + "/bin/rnix-lsp";
+              "nix.serverPath" = pkgs.nil + "/bin/nil";
             };
           };
           runtimeInputs = builtins.attrValues

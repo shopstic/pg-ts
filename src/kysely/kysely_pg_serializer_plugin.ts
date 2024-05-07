@@ -191,9 +191,17 @@ class Transformer extends OperationNodeTransformer {
       }
 
       const nodeValue = node.value;
-      assert(ColumnNode.is(node.column));
+      let columnNode: ColumnNode;
 
-      const columnName = node.column.column.name;
+      if (ReferenceNode.is(node.column)) {
+        assert(ColumnNode.is(node.column.column));
+        columnNode = node.column.column;
+      } else {
+        assert(ColumnNode.is(node.column));
+        columnNode = node.column;
+      }
+
+      const columnName = columnNode.column.name;
       const serializer = this.getSerializer(currentTables[0].name, columnName, currentTables[0].schema);
 
       if (serializer) {
